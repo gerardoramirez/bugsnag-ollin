@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "549260270223",
+    "firebase_url": "https://ollin-2f3ed.firebaseio.com",
+    "project_id": "ollin-2f3ed",
+    "storage_bucket": "ollin-2f3ed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:549260270223:android:a8cf23b8abccd98d",
+        "android_client_info": {
+          "package_name": "com.equipoazteca.ollin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "549260270223-a2d1u5l14vv1n3tehub1mim9m98hsgi3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWWL_1b46InWa2jOHipitaj7rdARkqqWE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "549260270223-a2d1u5l14vv1n3tehub1mim9m98hsgi3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
