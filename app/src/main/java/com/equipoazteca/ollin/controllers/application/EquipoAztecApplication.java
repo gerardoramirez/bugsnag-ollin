@@ -67,6 +67,12 @@ public class EquipoAztecApplication extends Application {
                 error.addToTab("BootsOnGround", "company", "Equipo Azteca");
                 error.addToTab("BootsOnGround", "anonymous_user", true);
                 error.addToTab("BootsOnGround", "language", getCurrentLanguage());
+
+                //Expirements
+                String metaTags[] = new String[] {"new_onboarding", "search_v2", "login_experience"};
+                error.addToTab("experiments", "experiments", metaTags);
+
+
                 return true;
             }
         });

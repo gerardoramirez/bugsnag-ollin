@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 
 import java.util.EmptyStackException;
 import java.util.HashMap;
+import java.util.Random;
 
 import butterknife.BindView ;
 import butterknife.ButterKnife;
@@ -33,6 +34,8 @@ public class LoginActivity extends BaseActivity {
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     private static final int REQUEST_SIGNUP = 0;
+    static final int MAX = 6;
+    static final int MIN = 1;
 
     private EquipoAztecApplication equipoAztecApplication;
 
@@ -126,7 +129,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void onLoginFailed() {
-        Toast.makeText(LoginActivity.this, "Login failed.", Toast.LENGTH_LONG).show();
+        Toast.makeText(LoginActivity.this, bugSnagErrorMockUp(), Toast.LENGTH_LONG).show();
         loginButton.setEnabled(true);
     }
 
@@ -137,12 +140,11 @@ public class LoginActivity extends BaseActivity {
         String password = passwordText.getText().toString();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+
+
             emailText.setError("enter a valid email address");
             valid = false;
-            Bugsnag.leaveBreadcrumb("Preference updated", BreadcrumbType.STATE, new HashMap<String, String>() {{
-                put("from", "moka");
-                put("to", "french press");
-            }});
+
 
             // Throw an empty exception
             //Bugsnag.notify(new RuntimeException("Test error"));
@@ -231,5 +233,48 @@ public class LoginActivity extends BaseActivity {
 
     private void setBugsnagUser(String email, String name) {
         Bugsnag.setUser("123456",email, name);
+    }
+
+    private String bugSnagErrorMockUp() {
+        String emailErrorMessage = "";
+        Bugsnag.leaveBreadcrumb("Test Case 1001", BreadcrumbType.STATE, new HashMap<String, String>() {{
+            put("ui_ux", "messages");
+            put("errors", "email validation");
+        }});
+
+        switch(randomNumber()) {
+            case 1 :
+                emailErrorMessage = "email needed";
+                break;
+            case 2 :
+                emailErrorMessage = "email required";
+                break;
+            case 3 :
+                emailErrorMessage = "email please";
+                break;
+            case 4:
+                emailErrorMessage = "email will be needed";
+                break;
+            case 5:
+                emailErrorMessage = "you forgot your email";
+                break;
+            case 6:
+                emailErrorMessage = "username is your email";
+                Bugsnag.notify(new RuntimeException("Feature is broken!!! Yikes."));
+                break;
+            default :
+                emailErrorMessage = "please enter something";
+        }
+
+        return  emailErrorMessage;
+    }
+
+    public static int randomNumber() {
+        int randomNumValue = 0;
+
+        Random rand = new Random();
+        randomNumValue = rand.nextInt((MAX - MIN) + 1) + MIN;
+
+        return randomNumValue;
     }
 }
