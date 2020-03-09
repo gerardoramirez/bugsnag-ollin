@@ -3,11 +3,19 @@ package com.equipoazteca.ollin.controllers.application;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
+
+import android.os.Build;
+import android.os.LocaleList;
 import android.util.Log;
 
+import com.bugsnag.android.BeforeNotify;
+import com.bugsnag.android.Bugsnag;
+import com.bugsnag.android.Error;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Locale;
 
 
 public class EquipoAztecApplication extends Application {
@@ -22,15 +30,13 @@ public class EquipoAztecApplication extends Application {
     public void onCreate() {
         Log.d(TAG, "process onCreate ...");
         super.onCreate();
-
         FirebaseApp.initializeApp(this);
 
-        mAuth = FirebaseAuth.getInstance();
+        Bugsnag.init(this);
 
-        if (mAuth != null) {
-            // do your stuff
-        } else {
-        }
+        Bugsnag.setUser("123456", "noauthentication@bug.com", "Bug Bug");
+
+        mAuth = FirebaseAuth.getInstance();
 
         //authentication session
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -52,6 +58,22 @@ public class EquipoAztecApplication extends Application {
 
         mAuth.addAuthStateListener(mAuthListener);
 
+        Bugsnag.beforeNotify(new BeforeNotify() {
+            @Override
+            public boolean run(@NonNull Error error) {
+                Log.d(TAG, "bugsnag update...");
+
+                // Attach customer information to every error report
+                error.addToTab("account", "company", "Equipo Azteca");
+                error.addToTab("account", "anonymous_user", true);
+                error.addToTab("account", "language", getCurrentLanguage());
+                return true;
+            }
+        });
+        //
+        // Test the integration
+        //Bugsnag.notify(new RuntimeException("Test error"));
+        Bugsnag.leaveBreadcrumb("App loaded");
     }
 
     @Override
@@ -72,5 +94,11 @@ public class EquipoAztecApplication extends Application {
         return mAuth;
     }
 
-
+    private String getCurrentLanguage(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            return LocaleList.getDefault().get(0).getLanguage();
+        } else{
+            return Locale.getDefault().getLanguage();
+        }
+    }
 }

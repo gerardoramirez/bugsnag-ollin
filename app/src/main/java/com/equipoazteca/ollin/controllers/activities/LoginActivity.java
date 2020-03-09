@@ -11,11 +11,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bugsnag.android.BeforeNotify;
+import com.bugsnag.android.BreadcrumbType;
+import com.bugsnag.android.Bugsnag;
+import com.bugsnag.android.Error;
 import com.equipoazteca.ollin.R;
 import com.equipoazteca.ollin.controllers.application.EquipoAztecApplication;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+
+import java.util.EmptyStackException;
+import java.util.HashMap;
 
 import butterknife.BindView ;
 import butterknife.ButterKnife;
@@ -57,6 +65,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "process Login::onClick ...");
+                Bugsnag.leaveBreadcrumb("User clicked Login");
                 login();
             }
         });
@@ -76,6 +85,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
 
@@ -129,6 +139,13 @@ public class LoginActivity extends BaseActivity {
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailText.setError("enter a valid email address");
             valid = false;
+            Bugsnag.leaveBreadcrumb("Preference updated", BreadcrumbType.STATE, new HashMap<String, String>() {{
+                put("from", "moka");
+                put("to", "french press");
+            }});
+
+            // Throw an empty exception
+            //throw new EmptyStackException();
         } else {
             emailText.setError(null);
         }
@@ -150,7 +167,7 @@ public class LoginActivity extends BaseActivity {
         }
 
         showProgressDialog();
-
+        setBugsnagUser(email, "");
         equipoAztecApplication.getFirebaseAuth().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -177,6 +194,8 @@ public class LoginActivity extends BaseActivity {
 
     public void login() {
         Log.d(TAG, "process Login() ...");
+        final String email = emailText.getText().toString();
+        final String password = passwordText.getText().toString();
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme_Dark_Dialog);
@@ -187,15 +206,13 @@ public class LoginActivity extends BaseActivity {
 
         if (!validate()) {
             Log.d(TAG, "validation did not pass ...");
+
             progressDialog.dismiss();
             onLoginFailed();
             return;
         }
 
         loginButton.setEnabled(false);
-
-        String email = emailText.getText().toString();
-        String password = passwordText.getText().toString();
 
         signIn(email,password);
         progressDialog.dismiss();
@@ -210,5 +227,9 @@ public class LoginActivity extends BaseActivity {
         Log.d(TAG, "current user is:  " + equipoAztecApplication.getFirebaseAuth().getCurrentUser());
 
         return equipoAztecApplication.getFirebaseAuth().getCurrentUser() != null;
+    }
+
+    private void setBugsnagUser(String email, String name) {
+        Bugsnag.setUser("123456",email, name);
     }
 }

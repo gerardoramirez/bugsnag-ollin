@@ -9,6 +9,14 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.bugsnag.android.API_KEY"
+            android:value="2cc42cc3a5544ad3a65fab3462695a3f"/>
+
+        <meta-data android:name="com.bugsnag.android.DETECT_ANRS"
+            android:value="true"/>
+
         <activity
             android:name=".controllers.activities.MainActivity"
             android:label="@string/app_name">

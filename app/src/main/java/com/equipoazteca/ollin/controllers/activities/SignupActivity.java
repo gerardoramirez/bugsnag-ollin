@@ -2,6 +2,8 @@ package com.equipoazteca.ollin.controllers.activities;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -10,7 +12,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bugsnag.android.BeforeNotify;
+import com.bugsnag.android.BreadcrumbType;
+import com.bugsnag.android.Bugsnag;
+import com.bugsnag.android.Error;
 import com.equipoazteca.ollin.R;
+
+import java.util.EmptyStackException;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -115,6 +124,7 @@ public class SignupActivity extends AppCompatActivity {
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _emailText.setError("enter a valid email address");
             valid = false;
+
         } else {
             _emailText.setError(null);
         }
