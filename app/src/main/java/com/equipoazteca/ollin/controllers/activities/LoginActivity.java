@@ -145,7 +145,7 @@ public class LoginActivity extends BaseActivity {
             }});
 
             // Throw an empty exception
-            //throw new EmptyStackException();
+            //Bugsnag.notify(new RuntimeException("Test error"));
         } else {
             emailText.setError(null);
         }

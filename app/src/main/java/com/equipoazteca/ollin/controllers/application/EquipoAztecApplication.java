@@ -64,9 +64,9 @@ public class EquipoAztecApplication extends Application {
                 Log.d(TAG, "bugsnag update...");
 
                 // Attach customer information to every error report
-                error.addToTab("account", "company", "Equipo Azteca");
-                error.addToTab("account", "anonymous_user", true);
-                error.addToTab("account", "language", getCurrentLanguage());
+                error.addToTab("BootsOnGround", "company", "Equipo Azteca");
+                error.addToTab("BootsOnGround", "anonymous_user", true);
+                error.addToTab("BootsOnGround", "language", getCurrentLanguage());
                 return true;
             }
         });
@@ -74,6 +74,8 @@ public class EquipoAztecApplication extends Application {
         // Test the integration
         //Bugsnag.notify(new RuntimeException("Test error"));
         Bugsnag.leaveBreadcrumb("App loaded");
+
+
     }
 
     @Override
